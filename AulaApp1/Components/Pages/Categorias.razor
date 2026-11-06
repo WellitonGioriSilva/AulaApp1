@@ -1,0 +1,48 @@
+@page "/categorias"
+
+<h3>Categorias</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-body">
+            <EditForm Model="categoriaEmEdicao" OnValidSubmit="AdicionarCategoria">
+                <DataAnnotationsValidator />
+                <label class="form-label">Nome</label>
+                <InputText class="form-control" @bind-Value="categoriaEmEdicao.Nome" />
+                <ValidationMessage For="() => categoriaEmEdicao.Nome" />
+                <label class="form-label">Quantidade</label>
+                <InputNumber class="form-control" @bind-Value="categoriaEmEdicao.Quantidade" />
+                <ValidationMessage For="() => categoriaEmEdicao.Quantidade" />
+                <button class="btn btn-primary" type="submit">Adicionar categoria</button>
+            </EditForm>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <table class="table table-striped">
+            <thead><tr><th>Nome</th><th>Quantidade</th></tr></thead>
+            <tbody>
+                @if (categorias.Count == 0)
+                {
+                    <tr><td class="text-muted" colspan="2">Nenhuma categoria cadastrada</td></tr>
+                }
+                else
+                {
+                    @foreach (var categoria in categorias)
+                    {
+                        <tr><td>@categoria.Nome</td><td>@categoria.Quantidade</td></tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<Categoria> categorias = new();
+    private Categoria categoriaEmEdicao = new();
+
+    private void AdicionarCategoria()
+    {
+        categorias.Add(categoriaEmEdicao);
+        categoriaEmEdicao = new Categoria();
+    }
+}

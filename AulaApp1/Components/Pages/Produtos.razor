@@ -1,64 +1,50 @@
-﻿@page "/produtos"
+@page "/produtos"
 
 <h3>Produtos</h3>
 <div class="row">
-	<div class="col-md-4">
-		<div class="card card-body">
-			<label class="form-label">Nome</label>
-			<input class="form-control" @bind="nome" />
-			<label class="form-label">Preço</label>
-			<input class="form-control" type="number" @bind="preco" />
-			<label class="form-label">Quantidade</label>
-			<input class="form-control" type="number" @bind="quantidade" />
-			<button class="btn btn-primary" @onclick="AdicionarProduto">Adicionar produto</button>
-		</div>
-	</div>
-	<div class="col-md-8">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Nome</th>
-					<th>Preço</th>
-					<th>Quantidade</th>
-				</tr>
-			</thead>
-			<tbody>
-				@if (produtos.Count == 0)
-				{
-					<p class="text-muted">Nenhum produto cadastrado</p>
-				}
-				else
-				{
-					@foreach (var p in produtos)
-					{
-						<tr>
-							<td>@p.Nome</td>
-							<td>R$@p.Preco</td>
-							<td>@p.Quantidade un.</td>
-						</tr>
-					}
-				}
-			</tbody>
-		</table>
-	</div>
+    <div class="col-md-4">
+        <div class="card card-body">
+            <EditForm Model="produtoEmEdicao" OnValidSubmit="AdicionarProduto">
+                <DataAnnotationsValidator />
+                <label class="form-label">Nome</label>
+                <InputText class="form-control" @bind-Value="produtoEmEdicao.Nome" />
+                <ValidationMessage For="() => produtoEmEdicao.Nome" />
+                <label class="form-label">Preço</label>
+                <InputNumber class="form-control" @bind-Value="produtoEmEdicao.Preco" />
+                <ValidationMessage For="() => produtoEmEdicao.Preco" />
+                <label class="form-label">Quantidade</label>
+                <InputNumber class="form-control" @bind-Value="produtoEmEdicao.Quantidade" />
+                <button class="btn btn-primary" type="submit">Adicionar produto</button>
+            </EditForm>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <table class="table table-striped">
+            <thead><tr><th>Nome</th><th>Preço</th><th>Quantidade</th></tr></thead>
+            <tbody>
+                @if (produtos.Count == 0)
+                {
+                    <tr><td class="text-muted" colspan="3">Nenhum produto cadastrado</td></tr>
+                }
+                else
+                {
+                    @foreach (var p in produtos)
+                    {
+                        <tr><td>@p.Nome</td><td>R$@p.Preco</td><td>@p.Quantidade un.</td></tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
 @code {
-	private string nome = "";
-	private decimal preco;
-	private int quantidade;
+    private List<Produto> produtos = new();
+    private Produto produtoEmEdicao = new();
 
-	private List<Produto> produtos = new();
-
-	private void AdicionarProduto()
-	{
-		produtos.Add(new Produto
-		{
-			Nome = nome,
-			Preco = preco,
-			Quantidade = quantidade
-		});
-		nome = "";
-		preco = 0;
-		quantidade = 0;
-	}
+    private void AdicionarProduto()
+    {
+        produtos.Add(produtoEmEdicao);
+        produtoEmEdicao = new Produto();
+    }
 }
